@@ -5,7 +5,7 @@ You can find out the availability of cabins on a cruise.
 
 ### Running Locally
 
-#### setup
+Setup
 
 ```
 npm install
@@ -21,6 +21,7 @@ bin/hubot
 
 You can modify following code directly.
 
+scripts/index.js
 ```
 // SELECT YOUR CRUISE DETAILs URL
 const cruiseDetailsUrl = 'https://www.msccruisesusa.com/webapp/wcs/stores/servlet/CruiseDetailsCmd?storeId=12264&catalogId=10001&langId=-1004&partNumber=SV20190805GOAGOA&pageFrom=CruiseResults&listinoCode=B-SVCA91KNE&packageType=_&bestPrice=1138&composition=2,0,0,0';
