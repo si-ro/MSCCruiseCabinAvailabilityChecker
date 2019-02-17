@@ -3,6 +3,10 @@
 This is a Hubot to check MSC Cruise cabin availability.
 You can find out the availability of cabins on a cruise.
 
+### Screenshot
+
+![slack bot](screenshot.png)
+
 ### Running Locally
 
 Setup
