@@ -21,19 +21,24 @@ bin/hubot
 
 You can modify following code directly.
 
-scripts/index.js
-```
+
+```javascript:scripts/index.js
 // SELECT YOUR CRUISE DETAILs URL
 const cruiseDetailsUrl = 'https://www.msccruisesusa.com/webapp/wcs/stores/servlet/CruiseDetailsCmd?storeId=12264&catalogId=10001&langId=-1004&partNumber=SV20190805GOAGOA&pageFrom=CruiseResults&listinoCode=B-SVCA91KNE&packageType=_&bestPrice=1138&composition=2,0,0,0';
-// SELECT YOUR PREFERRED STATEROOM
-const cabinType='tab-price-cat-YC1-1-10';
+```
+
+```javascript:scripts/index.js
+    .wait('.tab-price-cat-YC1-1-10')
+    .evaluate(() => {
+      return document.querySelector('.tab-price-cat-YC1-1-10 .cs-price').innerText;
+    })
 ```
 
 * cruiseDetailsUrl  
 You can searh MSC Cruise detail.  
 https://www.msccruisesusa.com/en-us/Homepage.aspx
 * cabinType  
-following cabinType avalilable.
+following value avalilable.
     * tab-price-cat-YIN-1-9 MSC YACHT CLUB INTERIOR SUITE
     * tab-price-cat-YC1-1-10 MSC YACHT CLUB DELUXE SUITE
     * tab-price-cat-YC3-1-11 MSC YACHT CLUB ROYAL SUITE
