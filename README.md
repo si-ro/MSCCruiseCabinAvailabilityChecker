@@ -5,7 +5,9 @@ You can find out the availability of cabins on a cruise.
 
 ### Screenshot
 
-![slack bot](screenshot.png)
+<kbd>![slack bot](screenshot.png){:height="50%" width="50%"}</kbd>
+
+<kbd>![slack bot](screenshot.png){:height="50%" width="50%"}</kbd>
 
 ### Running Locally
 
