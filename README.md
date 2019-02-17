@@ -61,7 +61,8 @@ following value avalilable.
     TWO-BEDROOM GRAND SUITE
     * tab-price-cat-FLA-1-7  
     SUPER FAMILY
-    * tab-price-cat-FLP-1-8  SUPER FAMILY PLUS
+    * tab-price-cat-FLP-1-8  
+    SUPER FAMILY PLUS
 
 ### Other
 
