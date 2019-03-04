@@ -24,8 +24,8 @@ const checkCruise = (hubot) => {
   logger.debug(`-> URL: ${cruiseDetailsUrl}`);
 
   puppeteer.launch({
-    headless: false,
-    devtools: true,
+    headless: true,
+    devtools: false,
     defaultViewport: {
       width: 1280,
       height: 1024,
