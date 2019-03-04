@@ -3,7 +3,7 @@ const {CronJob} = require('cron');
 const log4js = require('log4js');
 
 const logger = log4js.getLogger();
-logger.level = 'debug';
+logger.level = 'info';
 
 // SELECT YOUR CRUISE DETAILS URL
 const cruiseDetailsUrl = 'https://www.msccruisesusa.com/webapp/wcs/stores/servlet/CruiseDetailsCmd?storeId=12264&catalogId=10001&langId=-1004&partNumber=SV20190805GOAGOA&pageFrom=CruiseResults&listinoCode=B-SVCA91KNE&packageType=_&bestPrice=1138&composition=2,0,0,0';
