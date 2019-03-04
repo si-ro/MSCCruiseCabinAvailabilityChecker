@@ -27,17 +27,14 @@ $ bin/hubot
 
 You can modify following code directly.
 
-
 ```javascript:scripts/index.js
 // SELECT YOUR CRUISE DETAILs URL
 const cruiseDetailsUrl = 'https://www.msccruisesusa.com/webapp/wcs/stores/servlet/CruiseDetailsCmd?storeId=12264&catalogId=10001&langId=-1004&partNumber=SV20190805GOAGOA&pageFrom=CruiseResults&listinoCode=B-SVCA91KNE&packageType=_&bestPrice=1138&composition=2,0,0,0';
 ```
 
 ```javascript:scripts/index.js
-.wait('.tab-price-cat-YC1-1-10')
-.evaluate(() => {
-  return document.querySelector('.tab-price-cat-YC1-1-10 .cs-price').innerText;
-})
+// SELECT YOUR PREFERRED STATEROOM
+const cabinType = 'YC1';
 ```
 
 * cruiseDetailsUrl  
@@ -45,29 +42,29 @@ You can searh MSC Cruise detail.
 https://www.msccruisesusa.com/en-us/Homepage.aspx
 * cabinType  
 following value avalilable.
-    * tab-price-cat-YIN-1-9  
+    * YIN  
     MSC YACHT CLUB INTERIOR SUITE
-    * tab-price-cat-YC1-1-10  
+    * YC1  
     MSC YACHT CLUB DELUXE SUITE
-    * tab-price-cat-YC3-1-11  
+    * YC3  
     MSC YACHT CLUB ROYAL SUITE
-    * tab-price-cat-INS-1-0  
-    INSIDE
-    * tab-price-cat-OUT-1-1  
-    OCEAN VIEW
-    * tab-price-cat-OUB-1-2  
-    BALCONY
-    * tab-price-cat-SUI-1-3  
-    SUITE
-    * tab-price-cat-SEW-1-4  
+    * I2  
+    INSIDE(Fantastica)
+    * O2
+    OCEAN VIEW(Fantastica)
+    * B2  
+    BALCONY(Fantastica)
+    * S3  
+    SUITE(Aurea)
+    * SE3  
     GEAND SUITE
-    * tab-price-cat-SJ3-1-5  
+    * SJ3  
     SUITE WITH WHITEPOOL TAB
-    * tab-price-cat-SD3-1-6  
+    * SD3  
     TWO-BEDROOM GRAND SUITE
-    * tab-price-cat-FLA-1-7  
+    * FLA  
     SUPER FAMILY
-    * tab-price-cat-FLP-1-8  
+    * FLP  
     SUPER FAMILY PLUS
 
 ### Other
