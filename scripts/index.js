@@ -20,7 +20,7 @@ const cabinType = 'YC1';
 
 const checkCruise = (hubot) => {
   logger.debug('Start check booking process.');
-  hubot.send({room: slackUserOrRoom}, 'Start check MSC Cruise cabin availability...');
+  hubot.send({room: slackUserOrRoom}, `Start check MSC Cruise ${cabinType} cabin availability...`);
   logger.debug(`-> URL: ${cruiseDetailsUrl}`);
 
   puppeteer.launch({
@@ -40,7 +40,7 @@ const checkCruise = (hubot) => {
       const element = await page.$(`td[data-code='${cabinType}'] span`);
       const result = await page.evaluate(el => el.innerText, element);
 
-      let message = `Finish check MSC cruise. -> ${result}.`;
+      let message = `Finish check MSC cruise ${cabinType} cabin. -> ${result}.`;
       if (result !== 'Sold Out') {
         message += `\nCabin is availability! Check soon! -> ${cruiseDetailsUrl}`;
       }
