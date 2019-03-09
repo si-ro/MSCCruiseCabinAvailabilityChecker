@@ -6,7 +6,8 @@ const logger = log4js.getLogger();
 logger.level = 'info';
 
 // SELECT YOUR CRUISE DETAILS URL
-const cruiseDetailsUrl = 'https://www.msccruisesusa.com/webapp/wcs/stores/servlet/CruiseDetailsCmd?storeId=12264&catalogId=10001&langId=-1004&partNumber=SV20190805GOAGOA&pageFrom=CruiseResults&listinoCode=B-SVCA91KNE&packageType=_&bestPrice=1138&composition=2,0,0,0';
+const cruiseDetailsUrl_USA = 'https://www.msccruisesusa.com/webapp/wcs/stores/servlet/CruiseDetailsCmd?storeId=12264&catalogId=10001&langId=-1004&partNumber=SV20190805GOAGOA&pageFrom=CruiseResults&listinoCode=B-SVCA91KNE&packageType=_&bestPrice=1138&composition=2,0,0,0';
+const cruiseDetailsUrl_UK = 'https://www.msccruises.co.uk/Booking?CruiseID=SV20190805GOAGOA&Type=CROL&PriceCode=SVGB92H5PR#/category/0';
 
 const slackUserOrRoom = '@siro';
 
@@ -15,13 +16,25 @@ const headers = {
   'cache-control': 'no-cache',
 };
 
+const cabinTypeNameMap = {
+  'I2': 'INTERIOR',
+  'O2': 'OCEAN VIEW',
+  'B2': 'BALCONY',
+  'S3': 'SUITE',
+  'SJ3': 'SUITE WITH WHIRLPOOL BATH',
+  'SE3': 'GRAND SUITE',
+  'FLA': 'SUPER FAMILY',
+  'FLP': 'SUPER FAMILY PLUS',
+  'YIN': 'MSC YACHT CLUB INTERIOR',
+  'YC1': 'MSC YACHT CLUB DELUXE SUITE',
+  'YC3': 'MSC YACHT CLUB ROYAL SUITE',
+};
 // SELECT YOUR PREFERRED STATEROOM
 const cabinType = 'YC1';
 
 const checkCruise = (hubot) => {
   logger.debug('Start check booking process.');
   hubot.send({room: slackUserOrRoom}, `Start check MSC Cruise ${cabinType} cabin availability...`);
-  logger.debug(`-> URL: ${cruiseDetailsUrl}`);
 
   puppeteer.launch({
     headless: true,
@@ -34,15 +47,42 @@ const checkCruise = (hubot) => {
     try {
       const page = await browser.newPage();
       await page.setUserAgent('Mozilla/5.0 (iPad; CPU OS 11_0 like Mac OS X) AppleWebKit/604.1.34 (KHTML, like Gecko) Version/11.0 Mobile/15A5341f Safari/604.1');
-      await page.goto(cruiseDetailsUrl);
+
+      logger.debug(`URL: ${cruiseDetailsUrl_USA}`);
+      await page.goto(cruiseDetailsUrl_USA);
       await page.waitForSelector(`td[data-code='${cabinType}']`);
 
       const element = await page.$(`td[data-code='${cabinType}'] span`);
-      const result = await page.evaluate(el => el.innerText, element);
+      const result_USA = await page.evaluate(el => el.innerText, element);
 
-      let message = `Finish check MSC cruise ${cabinType} cabin. -> ${result}.`;
-      if (result !== 'Sold Out') {
-        message += `\nCabin is availability! Check soon! -> ${cruiseDetailsUrl}`;
+      const cabinTypePriceMap = {};
+      if (cruiseDetailsUrl_UK) {
+        logger.debug(`URL: ${cruiseDetailsUrl_UK}`);
+        await page.goto(cruiseDetailsUrl_UK);
+        await page.waitForSelector('.section--cabin-types__cabin-type');
+        // await page.click('input[value="See More Cabins"]');
+        // await page.waitForSelector(`td[data-code='${cabinType}']`);
+
+        const cabinTypes = await page.$$('.section--cabin-types__cabin-type');
+
+        for (let i = 0; i < cabinTypes.length; i++) {
+          const cabinType = cabinTypes[i];
+          const name = await page.evaluate(e => e.querySelector('.cabin-type__content__name span').innerText, cabinType);
+          const price = await page.evaluate(e => e.querySelectorAll('.cabin-type__content__price span')[1].innerText, cabinType);
+          logger.debug(`-> ${name}, ${price}`);
+
+          cabinTypePriceMap[name] = price;
+        }
+      }
+
+      const result_UK = cabinTypePriceMap[cabinTypeNameMap[cabinType]];
+
+      let message = `Finish check MSC cruise ${cabinType} cabin. -> USA: ${result_USA}, UK: ${result_UK}.`;
+      if (result_USA !== 'Sold Out') {
+        message += `\nCabin is availability! Check soon! -> ${cruiseDetailsUrl_USA}`;
+      }
+      if (result_UK !== 'Not available') {
+        message += `\nCabin is availability! Check soon! -> ${cruiseDetailsUrl_UK}`;
       }
       hubot.send({room: slackUserOrRoom}, message);
     } catch (error) {
