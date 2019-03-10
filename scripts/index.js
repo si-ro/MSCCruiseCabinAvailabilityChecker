@@ -46,6 +46,7 @@ const checkCruise = (hubot) => {
   }).then(async browser => {
     try {
       const page = await browser.newPage();
+      page.setDefaultTimeout(60000);
       await page.setUserAgent('Mozilla/5.0 (iPad; CPU OS 11_0 like Mac OS X) AppleWebKit/604.1.34 (KHTML, like Gecko) Version/11.0 Mobile/15A5341f Safari/604.1');
 
       logger.debug(`URL: ${cruiseDetailsUrl_USA}`);
@@ -60,8 +61,6 @@ const checkCruise = (hubot) => {
         logger.debug(`URL: ${cruiseDetailsUrl_UK}`);
         await page.goto(cruiseDetailsUrl_UK);
         await page.waitForSelector('.section--cabin-types__cabin-type');
-        // await page.click('input[value="See More Cabins"]');
-        // await page.waitForSelector(`td[data-code='${cabinType}']`);
 
         const cabinTypes = await page.$$('.section--cabin-types__cabin-type');
 
