@@ -7,7 +7,7 @@ logger.level = 'info';
 
 // SELECT YOUR CRUISE DETAILS URL
 const cruiseDetailsUrl_USA = 'https://www.msccruisesusa.com/webapp/wcs/stores/servlet/CruiseDetailsCmd?storeId=12264&catalogId=10001&langId=-1004&partNumber=SV20190805GOAGOA&pageFrom=CruiseResults&listinoCode=B-SVCA91KNE&packageType=_&bestPrice=1138&composition=2,0,0,0';
-const cruiseDetailsUrl_UK = 'https://www.msccruises.co.uk/Booking?CruiseID=SV20190805GOAGOA&Type=CROL&PriceCode=SVGB92H5PR#/category/0';
+const cruiseDetailsUrl_UK = 'https://www.msccruises.co.uk/Booking?CruiseID=SV20190805GOAGOA&Type=CROL&PriceCode=SVGB92N1PR#/category/0';
 
 const slackUserOrRoom = '@siro';
 
