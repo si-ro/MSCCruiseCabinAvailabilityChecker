@@ -10,7 +10,7 @@ const cruiseDetailsUrl_USA = 'https://www.msccruisesusa.com/webapp/wcs/stores/se
 const cruiseDetailsUrl_UK = 'https://www.msccruises.co.uk/Booking?CruiseID=SV20190805GOAGOA&Type=CROL&PriceCode=SVGB92N1PR#/category/0';
 
 const slackUserOrRoom = '@siro';
-
+const doubleCheck = true;
 const headers = {
   pragma: 'no-cache',
   'cache-control': 'no-cache',
@@ -56,33 +56,46 @@ const checkCruise = (hubot) => {
       const element = await page.$(`td[data-code='${cabinType}'] span`);
       const result_USA = await page.evaluate(el => el.innerText, element);
 
-      const cabinTypePriceMap = {};
-      if (cruiseDetailsUrl_UK) {
-        logger.debug(`URL: ${cruiseDetailsUrl_UK}`);
-        await page.goto(cruiseDetailsUrl_UK);
-        await page.waitForSelector('.section--cabin-types__cabin-type');
+      let causion;
 
-        const cabinTypes = await page.$$('.section--cabin-types__cabin-type');
+      let result = `USA: ${result_USA}`;
+      if (result_USA !== 'Sold Out') {
+        causion = `\nCabin is availability! Check soon! -> ${cruiseDetailsUrl_USA}`;
+      }
 
-        for (let i = 0; i < cabinTypes.length; i++) {
-          const cabinType = cabinTypes[i];
-          const name = await page.evaluate(e => e.querySelector('.cabin-type__content__name span').innerText, cabinType);
-          const price = await page.evaluate(e => e.querySelectorAll('.cabin-type__content__price span')[1].innerText, cabinType);
-          logger.debug(`-> ${name}, ${price}`);
+      if (doubleCheck) {
+        const cabinTypePriceMap = {};
+        if (cruiseDetailsUrl_UK) {
+          logger.debug(`URL: ${cruiseDetailsUrl_UK}`);
+          await page.goto(cruiseDetailsUrl_UK);
+          await page.waitForSelector('.section--cabin-types__cabin-type');
 
-          cabinTypePriceMap[name] = price;
+          const cabinTypes = await page.$$('.section--cabin-types__cabin-type');
+
+          for (let i = 0; i < cabinTypes.length; i++) {
+            const cabinType = cabinTypes[i];
+            const name = await page.evaluate(e => e.querySelector('.cabin-type__content__name span').innerText, cabinType);
+            const price = await page.evaluate(e => e.querySelectorAll('.cabin-type__content__price span')[1].innerText, cabinType);
+            logger.debug(`-> ${name}, ${price}`);
+
+            cabinTypePriceMap[name] = price;
+          }
+        }
+
+        const result_UK = cabinTypePriceMap[cabinTypeNameMap[cabinType]];
+        result = `USA: ${result_USA}, UK: ${result_UK}`;
+
+        if (result_UK !== undefined && result_UK !== 'Not available') {
+          causion += `\nCabin is availability! Check soon! -> ${cruiseDetailsUrl_UK}`;
         }
       }
 
-      const result_UK = cabinTypePriceMap[cabinTypeNameMap[cabinType]];
+      let message = `Finish check MSC cruise ${cabinType} cabin. -> ${result}.`;
 
-      let message = `Finish check MSC cruise ${cabinType} cabin. -> USA: ${result_USA}, UK: ${result_UK}.`;
-      if (result_USA !== 'Sold Out') {
-        message += `\nCabin is availability! Check soon! -> ${cruiseDetailsUrl_USA}`;
+      if (causion) {
+        message += causion;
       }
-      if (result_UK !== 'Not available') {
-        message += `\nCabin is availability! Check soon! -> ${cruiseDetailsUrl_UK}`;
-      }
+
       hubot.send({room: slackUserOrRoom}, message);
     } catch (error) {
       logger.error(`Unknown error occured. error: ${error}`);
